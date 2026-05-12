@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://zerodayheist.cyberhx.com/sitemap.xml

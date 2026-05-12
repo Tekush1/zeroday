@@ -1,185 +1,96 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@900&family=Space+Grotesk:wght@300;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Outfit", sans-serif;
+  --font-comic: "Bangers", system-ui;
   --font-sans: "Inter", sans-serif;
-  --font-header: "Outfit", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
-  --font-accent: "Space Grotesk", sans-serif;
   
-  --color-heist-red: #ff0033;
-  --color-heist-bg: #050505;
-  --color-heist-surface: #0f0f0f;
-  --color-heist-border: #222222;
+  --color-comic-black: #000000;
+  --color-comic-white: #ffffff;
+  --color-comic-yellow: #ffde00;
+  --color-comic-red: #ff0033;
+  --color-comic-blue: #2d5cf7;
 }
 
 @layer base {
   body {
-    @apply bg-heist-bg text-white selection:bg-heist-red selection:text-white cursor-default antialiased;
+    @apply bg-comic-yellow text-comic-black selection:bg-comic-red selection:text-white cursor-default antialiased scroll-smooth;
     font-family: var(--font-sans);
-    background: radial-gradient(circle at 50% 50%, #1a0505 0%, #050505 100%);
+    background-image: radial-gradient(circle, rgba(0,0,0,0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 }
 
 @layer utilities {
-  .heist-gradient {
-    background: linear-gradient(135deg, #050505 0%, #1a0505 100%);
+  .halftone-pattern {
+    background-image: radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 1px);
+    background-size: 3px 3px;
   }
 
-  .tech-grid {
-    background-image: 
-      linear-gradient(rgba(255, 0, 0, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 0, 0, 0.05) 1px, transparent 1px);
-    background-size: 50px 50px;
-    background-position: center center;
+  .comic-panel {
+    @apply border-[6px] border-black bg-white relative overflow-hidden;
+    box-shadow: 12px 12px 0px 0px rgba(0,0,0,1);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
-  .tech-grid-sm {
-    background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 100px 100px;
+  .comic-panel:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 18px 18px 0px 0px rgba(0,0,0,1);
   }
 
-  .scanner-line {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100px;
-    background: linear-gradient(to bottom, transparent, rgba(255, 0, 51, 0.05), transparent);
-    z-index: 100;
-    pointer-events: none;
-    animation: scan 4s linear infinite;
+  .speech-bubble {
+    @apply relative bg-white border-[4px] border-black p-6 rounded-[2rem] inline-block;
+    filter: drop-shadow(6px 6px 0px black);
   }
 
-  @keyframes scan {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(100vh); }
-  }
-
-  .crt-overlay {
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-    background-size: 100% 3px, 3px 100%;
-    pointer-events: none;
-    z-index: 100;
-  }
-
-  .scanlines {
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0) 50%,
-      rgba(0, 0, 0, 0.2) 50%
-    );
-    background-size: 100% 4px;
-    pointer-events: none;
-    z-index: 50;
-    animation: scanline 10s linear infinite;
-  }
-
-  @keyframes scanline {
-    from { background-position: 0 0; }
-    to { background-position: 0 100%; }
-  }
-
-  .glitch-text {
-    position: relative;
-    display: inline-block;
-  }
-
-  .glitch-text::before,
-  .glitch-text::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-  }
-
-  .glitch-text::before {
-    left: 2px;
-    text-shadow: -2px 0 #00fff9;
-    clip: rect(44px, 450px, 56px, 0);
-    animation: glitch-anim 5s infinite linear alternate-reverse;
-  }
-
-  .glitch-text::after {
-    left: -2px;
-    text-shadow: -2px 0 #ff0033, 2px 2px #ff0033;
-    animation: glitch-anim2 1s infinite linear alternate-reverse;
-  }
-
-  @keyframes glitch-anim {
-    0% { clip: rect(31px, 9999px, 94px, 0); }
-    20% { clip: rect(62px, 9999px, 42px, 0); }
-    40% { clip: rect(16px, 9999px, 78px, 0); }
-    60% { clip: rect(55px, 9999px, 12px, 0); }
-    80% { clip: rect(98px, 9999px, 86px, 0); }
-    100% { clip: rect(23px, 9999px, 51px, 0); }
-  }
-
-  @keyframes glitch-anim2 {
-    0% { clip: rect(65px, 9999px, 100px, 0); }
-    20% { clip: rect(12px, 9999px, 56px, 0); }
-    40% { clip: rect(87px, 9999px, 12px, 0); }
-    60% { clip: rect(34px, 9999px, 89px, 0); }
-    80% { clip: rect(5px, 9999px, 43px, 0); }
-    100% { clip: rect(90px, 9999px, 2px, 0); }
-  }
-
-  .industrial-border {
-    @apply border border-heist-border relative;
-  }
-  
-  .industrial-border::before, 
-  .industrial-border::after,
-  .industrial-corner-tl,
-  .industrial-corner-br {
+  .speech-bubble::after {
     content: '';
-    @apply absolute w-2 h-2 border-heist-red;
-    z-index: 10;
-  }
-  
-  .industrial-border::before { @apply top-0 left-0 border-t-2 border-l-2 -translate-x-[1px] -translate-y-[1px]; }
-  .industrial-border::after { @apply bottom-0 right-0 border-b-2 border-r-2 translate-x-[1px] translate-y-[1px]; }
-
-  .terminal-cursor {
-    @apply inline-block w-2.5 h-6 bg-heist-red align-middle ml-1;
-    animation: blink 1s step-end infinite;
+    @apply absolute bottom-[-24px] left-10 w-0 h-0 border-l-[24px] border-l-transparent border-r-[24px] border-r-transparent border-t-[24px] border-t-black;
   }
 
-  @keyframes blink {
-    from, to { opacity: 1; }
-    50% { opacity: 0; }
+  .speech-bubble-inner::after {
+    content: '';
+    @apply absolute bottom-[-18px] left-[43px] w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-t-[20px] border-t-white;
   }
 
-  .noise-overlay {
-    background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
-    opacity: 0.1;
-    pointer-events: none;
-    z-index: 40;
+  .action-line {
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 15px,
+      rgba(0,0,0,0.08) 15px,
+      rgba(0,0,0,0.08) 16px
+    );
   }
 
-  .cinematic-vignette {
-    background: radial-gradient(circle at center, transparent 20%, black 100%);
-    pointer-events: none;
+  .glitch-comic {
+    text-shadow: 6px 0px 0px #ff0033, -6px 0px 0px #00fff9;
   }
 
-  /* Fluid Typography Utils */
-  .text-fluid-hero {
-    font-size: clamp(3rem, 12vw, 12rem);
+  .comic-button {
+    @apply px-10 py-5 bg-black text-white font-comic text-3xl uppercase tracking-widest border-[4px] border-black transition-all relative;
+    box-shadow: 6px 6px 0px 0px #ff0033;
   }
 
-  .glow-red {
-    box-shadow: 0 0 20px rgba(255, 0, 51, 0.3);
+  .comic-button:hover {
+    @apply bg-comic-red translate-x-1 translate-y-1;
+    box-shadow: 0px 0px 0px 0px #ff0033;
   }
 
   .industrial-line {
-    @apply h-[1px] bg-white/5;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    @apply h-3 bg-black w-full;
+    background: repeating-linear-gradient(
+      45deg,
+      #000,
+      #000 10px,
+      #ffde00 10px,
+      #ffde00 20px
+    );
+  }
+  
+  .text-shadow-glow {
+    text-shadow: 0 0 20px rgba(255, 0, 51, 0.5);
   }
 }
 
