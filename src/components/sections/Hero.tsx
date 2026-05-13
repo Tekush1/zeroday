@@ -98,7 +98,6 @@ const Hero: React.FC = () => {
         <ComicPanel className="flex-1 bg-comic-white text-black flex flex-col justify-center items-center p-8 text-center group overflow-hidden">
           <div className="absolute top-2 right-2 flex items-center gap-2">
              <div className="w-2 h-2 bg-comic-red rounded-full animate-ping" />
-             <span className="font-mono text-[8px] uppercase tracking-widest text-comic-red font-bold">Live_Countdown</span>
           </div>
           
           <h3 className="font-comic text-4xl uppercase mb-6 text-black italic">Time Remaining</h3>
