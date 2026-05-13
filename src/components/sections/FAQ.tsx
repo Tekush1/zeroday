@@ -8,26 +8,54 @@ interface FAQProps {
 
 const FAQ: React.FC<FAQProps> = ({ onReadBook }) => {
   const faqs = [
-    {
-      q: "WHAT IS ZERO DAYHEIST?",
-      a: "It's an ultra-exclusive Capture The Flag (CTF) event where elite hackers (hacktivists) test their limits against our high-security virtual vaults."
-    },
-    {
-      q: "HOW DO I JOIN THE RESISTANCE?",
-      a: "Click the 'Initialize Mission' or 'Enlist Now' buttons. You'll need to pass the initial decryption test to gain full access to the terminal."
-    },
-    {
-      q: "IS THIS LEGAL?",
-      a: "In the digital frontier, laws are just suggestions. But for the record, this is a simulated environment designed for skill evaluation. No actual banks will be harmed."
-    },
-    {
-      q: "WHAT GEAR DO I NEED?",
-      a: "A stable uplink, a terminal with Linux/Mac/WSL, and a mind sharp enough to cut through AES-256 encryption. Coffee is highly recommended."
-    },
-    {
-      q: "ARE THERE PRIZES?",
-      a: "The top 'Breachers' will receive classified assets, exclusive bounties, and legendary status within our mesh network."
-    }
+{
+    q: "WHAT IS ZERO DAY HEIST?",
+    a: "Zero Day Heist is a 6-hour online Capture The Flag (CTF) competition where participants solve cybersecurity challenges based on real-world attack scenarios including web exploitation, cryptography, forensics, OSINT, reverse engineering, and more."
+  },
+  {
+    q: "WHO CAN PARTICIPATE?",
+    a: "Students, cybersecurity enthusiasts, ethical hackers, developers, and beginners from any background can participate. The event is open to all skill levels."
+  },
+  {
+    q: "IS THIS AN ONLINE EVENT?",
+    a: "Yes. The entire competition will be conducted online, allowing participants from anywhere in the world to compete remotely."
+  },
+  {
+    q: "CAN I PARTICIPATE SOLO?",
+    a: "The event is designed for teams of 2–4 members. Solo participation may not be allowed depending on the final event rules."
+  },
+  {
+    q: "HOW DO I REGISTER?",
+    a: "Click the 'Register' or 'Initialize Mission' button on the event page, complete your team details, and secure your slot before registrations close."
+  },
+  {
+    q: "WHAT SKILLS ARE REQUIRED?",
+    a: "Basic knowledge of Linux, networking, programming, or cybersecurity concepts is helpful, but the event includes challenges for both beginners and advanced players."
+  },
+  {
+    q: "WHAT CATEGORIES WILL BE INCLUDED?",
+    a: "Challenges may include Web Security, Cryptography, Reverse Engineering, OSINT, Digital Forensics, Binary Exploitation, Steganography, Networking, and Miscellaneous problem-solving tasks."
+  },
+  {
+    q: "WHAT TOOLS OR SETUP DO I NEED?",
+    a: "A laptop or desktop with a stable internet connection is enough. Linux, Kali Linux, WSL, or macOS is recommended for the best experience."
+  },
+  {
+    q: "IS ZERO DAY HEIST LEGAL?",
+    a: "Yes. All challenges are hosted inside a secure sandbox environment created strictly for educational and competitive purposes."
+  },
+  {
+    q: "HOW WILL THE WINNERS BE DECIDED?",
+    a: "Teams will be ranked based on points earned by solving challenges. The live leaderboard updates throughout the competition."
+  },
+  {
+    q: "ARE THERE ANY PRIZES?",
+    a: "Yes. Top teams will receive exciting rewards, certificates, recognition, sponsor goodies, and additional opportunities that will be revealed soon."
+  },
+  {
+    q: "WILL PARTICIPANTS RECEIVE CERTIFICATES?",
+    a: "Yes. Participation certificates and winner certificates will be provided after the event."
+  }
   ];
 
   const [openIndex, setOpenIndex] = useState<number | null>(0);
