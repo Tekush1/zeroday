@@ -9,7 +9,7 @@ interface FAQProps {
 const FAQ: React.FC<FAQProps> = ({ onReadBook }) => {
   const faqs = [
     {
-      q: "WHAT IS ZERO DAY HEIST?",
+      q: "WHAT IS ZERO DAYHEIST?",
       a: "It's an ultra-exclusive Capture The Flag (CTF) event where elite hackers (hacktivists) test their limits against our high-security virtual vaults."
     },
     {
