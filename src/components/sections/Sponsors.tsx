@@ -3,18 +3,13 @@ import ComicPanel from '../ui/ComicPanel';
 
 const Sponsors: React.FC = () => {
   const sponsors = [
-    { name: "CYBERDYNE", logo: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80&w=300&h=300" },
-    { name: "OSCORP", logo: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=300&h=300" },
-    { name: "STARK IND", logo: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=300&h=300" },
-    { name: "WAYNE ENT", logo: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=300&h=300" },
-    { name: "UMBRELLA", logo: "https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?auto=format&fit=crop&q=80&w=300&h=300" },
-    { name: "WEYLAND", logo: "https://images.unsplash.com/photo-1551288049-2e47262a6327?auto=format&fit=crop&q=80&w=300&h=300" }
+    { name: "HACKVISER", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxLkrJ1tQfj0u4Ox1dZ9X4B3eQJpMBVnJwhQ&s" }
   ];
 
   return (
     <section className="space-y-12">
       <div className="flex items-center gap-6">
-        <h2 className="font-comic text-6xl uppercase px-8 py-2 bg-comic-red text-white -rotate-1 border-4 border-black">Our Allies</h2>
+        <h2 className="font-comic text-6xl uppercase px-8 py-2 bg-comic-red text-white -rotate-1 border-4 border-black">Our Sponsors</h2>
         <div className="h-4 bg-black flex-1 halftone-pattern" />
       </div>
 
