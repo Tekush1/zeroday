@@ -12,11 +12,8 @@ const Header: React.FC = () => {
             <span className="font-mono text-[10px] uppercase opacity-40 font-black">Organized by</span>
             <div className="flex items-center gap-4">
                <div className="flex items-center group cursor-pointer">
-                  <img
-                    src="/cyberhx-logo.jpg"
-                    alt="CyberHX"
-                    className="h-8 w-auto object-contain group-hover:scale-110 transition-transform"
-                  />
+                  <span className="font-comic text-xl uppercase text-black">CyberHX </span>
+
                </div>
             </div>
           </div>

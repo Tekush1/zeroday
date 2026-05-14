@@ -8,28 +8,32 @@ const MissionBriefing: React.FC = () => {
       id: "ORG_01", 
       logo: (
         <div className="relative group">
-          <div className="w-24 h-24 bg-black text-comic-red flex items-center justify-center border-4 border-black rotate-6 group-hover:rotate-0 transition-transform shadow-[8px_8px_0_0_rgba(189,32,49,1)]">
-            <span className="font-comic text-4xl font-black italic">CHX</span>
+          <div className="w-28 h-28 bg-white border-4 border-black rotate-6 group-hover:rotate-0 transition-transform shadow-[6px_6px_0_0_rgba(0,0,0,1)] overflow-hidden flex items-center justify-center p-2">
+            <img src="/cyberhx-logo.jpg" alt="CyberHX" className="w-full h-full object-contain" />
           </div>
           <div className="absolute -top-2 -right-2 bg-comic-yellow text-black text-[10px] font-black px-1 border-2 border-black rotate-12">SEC_OPS</div>
         </div>
       ),
       title: "CYBERHX", 
-      desc: "CyberHX is a high-octane cybersecurity platform dedicated to elite training and vulnerability research.", 
+      desc: "CyberHX is an elite cybersecurity community focused on hacking, CTF challenges, and hands-on security research. Building the next generation of cyber warriors.", 
       color: "bg-comic-blue/5" 
     },
     { 
       id: "ORG_02", 
       logo: (
         <div className="relative group">
-          <div className="w-24 h-24 bg-comic-blue text-white flex items-center justify-center border-4 border-black -rotate-6 group-hover:rotate-0 transition-transform shadow-[8px_8px_0_0_rgba(0,0,0,1)]">
-            <span className="font-comic text-4xl font-black italic">IXEGO</span>
+          <div className="w-28 h-28 bg-white border-4 border-black -rotate-6 group-hover:rotate-0 transition-transform shadow-[6px_6px_0_0_rgba(0,0,0,1)] overflow-hidden">
+            <img 
+              src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=200&h=200&fit=crop" 
+              alt="IxEDGE" 
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="absolute -bottom-2 -left-2 bg-white text-black text-[10px] font-black px-1 border-2 border-black -rotate-12">INFRA_V2</div>
         </div>
       ),
-      title: "IXEGO", 
-      desc: "Ixego provides the robust cyberinfrastructure that powers the grid, ensuring zero-latency operations.", 
+      title: "IxEDGE", 
+      desc: "IxEDGE provides the robust cyberinfrastructure that powers the grid, ensuring zero-latency operations and unbreakable uptime for mission-critical systems.", 
       color: "bg-comic-red/5" 
     }
   ];
