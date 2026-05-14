@@ -30,7 +30,7 @@ const Socials: React.FC = () => {
     <section id="socials" className="comic-panel p-12 md:p-20 text-center space-y-12 halftone-pattern bg-comic-yellow border-[12px] overflow-hidden">
       <div className="absolute inset-0 opacity-10 action-line" />
       <div className="relative z-10 space-y-12">
-        <h2 className="font-comic text-7xl md:text-[8rem] uppercase tracking-tighter leading-none italic glitch-comic text-black">
+        <h2 className="font-comic text-7xl md:text-[8rem] uppercase tracking-tighter leading-none italic text-black">
           STAY <span className="text-comic-red underline decoration-comic-blue">CONNECTED.</span>
         </h2>
         

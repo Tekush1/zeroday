@@ -60,7 +60,7 @@ const Hero: React.FC = () => {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", stiffness: 200, damping: 10 }}
           >
-            <h2 className="font-comic text-6xl md:text-[8rem] leading-none uppercase tracking-[-0.05em] glitch-comic italic text-black">
+            <h2 className="font-comic text-6xl md:text-[8rem] leading-none uppercase tracking-[-0.05em] italic text-black">
               ARE YOU <br />
               <span className="text-comic-red text-[7rem] md:text-[10rem] px-6 bg-black text-white inline-block mt-4 -rotate-2">IN?</span>
             </h2>

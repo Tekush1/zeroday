@@ -14,7 +14,7 @@ const TargetDossiers: React.FC = () => {
     <section id="targets" className="bg-black p-12 comic-panel !shadow-none halftone-pattern border-x-0 border-y-[12px]">
       <div className="max-w-4xl mx-auto space-y-12">
         <div className="text-center">
-          <h2 className="font-comic text-7xl md:text-[10rem] text-white uppercase mb-4 leading-none glitch-comic">
+          <h2 className="font-comic text-7xl md:text-[10rem] text-white uppercase mb-4 leading-none">
             CLASSIFIED <span className="text-comic-red">VAULTS</span>
           </h2>
           <p className="text-comic-yellow font-comic text-2xl uppercase tracking-[0.2em]">

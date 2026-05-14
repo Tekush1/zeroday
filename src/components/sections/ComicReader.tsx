@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, BookOpen, ZoomIn, ZoomOut, Maximize2, Minimize2, Play, Pause, X } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { ChevronLeft, ChevronRight, BookOpen, ZoomIn, ZoomOut, Maximize2, Minimize2, Play, Pause } from 'lucide-react';
 import ComicPanel from '../ui/ComicPanel';
 import ComicLoader from '../ui/ComicLoader';
-import { motion, AnimatePresence, useAnimation } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 
 const comicPages = [
   "https://i.ibb.co/S7KhQ22x/Chat-GPT-Image-May-12-2026-11-27-12-PM.png",
@@ -27,6 +27,48 @@ const comicPages = [
   "https://i.ibb.co/yFrJrxP3/Chat-GPT-Image-May-12-2026-11-30-47-PM.png"
 ];
 
+function playPageFlip() {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const bufferSize = Math.floor(ctx.sampleRate * 0.08);
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize) * 0.35;
+    }
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 2200;
+    filter.Q.value = 0.6;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(1, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.09);
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    source.start();
+    source.stop(ctx.currentTime + 0.1);
+  } catch (_) {}
+}
+
+function playClickSound() {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(700, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.06);
+    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.07);
+  } catch (_) {}
+}
+
 const ComicReader: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -34,44 +76,44 @@ const ComicReader: React.FC = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
   const [controlsVisible, setControlsVisible] = useState(true);
+  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const controlsTimer = useRef<ReturnType<typeof setTimeout>>();
+  const touchStart = useRef<number>(0);
 
-  // Auto-playing logic
+  const playSound = useCallback((type: 'flip' | 'click') => {
+    if (!soundEnabled) return;
+    if (type === 'flip') playPageFlip();
+    else playClickSound();
+  }, [soundEnabled]);
+
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isAutoPlaying && !isPageLoading) {
       interval = setInterval(() => {
         if (currentPage < comicPages.length - 1) {
-          nextPage();
+          setDirection('next');
+          setCurrentPage(p => p + 1);
+          setIsPageLoading(true);
+          playSound('flip');
         } else {
           setIsAutoPlaying(false);
         }
-      }, 5000); // 5 seconds per page
+      }, 5000);
     }
     return () => clearInterval(interval);
-  }, [isAutoPlaying, isPageLoading, currentPage]);
+  }, [isAutoPlaying, isPageLoading, currentPage, playSound]);
 
-  // Hide controls auto-timer in fullscreen
   useEffect(() => {
-    let timer: NodeJS.Timeout;
     if (isFullscreen && controlsVisible) {
-      timer = setTimeout(() => setControlsVisible(false), 3000);
+      clearTimeout(controlsTimer.current);
+      controlsTimer.current = setTimeout(() => setControlsVisible(false), 3000);
     }
-    return () => clearTimeout(timer);
+    return () => clearTimeout(controlsTimer.current);
   }, [isFullscreen, controlsVisible]);
 
-  const handleInteraction = () => {
-    if (!controlsVisible) setControlsVisible(true);
-  };
-
-  // Preload logic: Load current + next 2 pages
   useEffect(() => {
-    const pagesToPreload = [
-      comicPages[currentPage],
-      comicPages[currentPage + 1],
-      comicPages[currentPage + 2]
-    ].filter(Boolean);
-
-    pagesToPreload.forEach(url => {
+    [comicPages[currentPage + 1], comicPages[currentPage + 2]].filter(Boolean).forEach(url => {
       const img = new Image();
       img.src = url;
     });
@@ -79,236 +121,216 @@ const ComicReader: React.FC = () => {
 
   const nextPage = useCallback(() => {
     if (currentPage < comicPages.length - 1) {
-      setCurrentPage(prev => prev + 1);
+      setDirection('next');
+      setCurrentPage(p => p + 1);
       setIsPageLoading(true);
-      if (!isFullscreen) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      playSound('flip');
     }
-  }, [currentPage, isFullscreen]);
+  }, [currentPage, playSound]);
 
   const prevPage = useCallback(() => {
     if (currentPage > 0) {
-      setCurrentPage(prev => prev - 1);
+      setDirection('prev');
+      setCurrentPage(p => p - 1);
       setIsPageLoading(true);
-      if (!isFullscreen) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      playSound('flip');
     }
-  }, [currentPage, isFullscreen]);
+  }, [currentPage, playSound]);
 
-  // Keyboard navigation
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') nextPage();
       if (e.key === 'ArrowLeft') prevPage();
       if (e.key === 'Escape' && isFullscreen) setIsFullscreen(false);
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, [nextPage, prevPage, isFullscreen]);
 
-  const toggleZoom = () => setIsZoomed(!isZoomed);
+  const showControls = () => { if (!controlsVisible) setControlsVisible(true); };
+
+  const handleTouchStart = (e: React.TouchEvent) => { touchStart.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStart.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { if (diff > 0) nextPage(); else prevPage(); }
+  };
+
   const toggleFullscreen = () => {
-    setIsFullscreen(!isFullscreen);
+    playSound('click');
+    setIsFullscreen(f => !f);
     setIsZoomed(false);
     setControlsVisible(true);
   };
 
-  const handleDragEnd = (event: any, info: any) => {
-    const threshold = 50;
-    if (info.offset.x < -threshold) nextPage();
-    if (info.offset.x > threshold) prevPage();
+  const variants = {
+    enter: (dir: 'next' | 'prev') => ({ x: dir === 'next' ? 60 : -60, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (dir: 'next' | 'prev') => ({ x: dir === 'next' ? -60 : 60, opacity: 0 }),
   };
 
   return (
-    <section 
+    <section
       id="logs"
-      onMouseMove={handleInteraction}
-      onTouchStart={handleInteraction}
-      className={`space-y-12 py-12 transition-all duration-500 ${isFullscreen ? 'fixed inset-0 z-[100] bg-black overflow-hidden flex flex-col' : ''}`}
+      onMouseMove={showControls}
+      onTouchStart={(e) => { showControls(); handleTouchStart(e); }}
+      onTouchEnd={handleTouchEnd}
+      className={`space-y-8 py-12 transition-all duration-500 ${isFullscreen ? 'fixed inset-0 z-[100] bg-black flex flex-col overflow-hidden' : ''}`}
     >
-      {/* Header Info */}
+      {/* Header */}
       <AnimatePresence>
         {(!isFullscreen || controlsVisible) && (
-          <motion.div 
-            initial={isFullscreen ? { y: -100 } : {}}
-            animate={{ y: 0 }}
-            exit={{ y: -100 }}
-            className={`flex flex-col md:flex-row items-center gap-6 justify-between shrink-0 container mx-auto px-4 ${isFullscreen ? 'bg-white p-4 border-b-4 border-black z-20' : ''}`}
+          <motion.div
+            initial={isFullscreen ? { y: -80, opacity: 0 } : {}}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -80, opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            className={`flex flex-col md:flex-row items-center gap-4 justify-between shrink-0 ${isFullscreen ? 'bg-white px-6 py-3 border-b-4 border-black' : 'container mx-auto px-4'}`}
           >
-            <div className="flex items-center gap-6">
-              <div className="bg-black text-white p-4 rotate-3 border-4 border-black">
-                <BookOpen size={isFullscreen ? 24 : 32} />
+            <div className="flex items-center gap-4">
+              <div className="bg-black text-white p-3 rotate-3 border-4 border-black">
+                <BookOpen size={isFullscreen ? 20 : 28} />
               </div>
-              <h2 className={`font-comic uppercase text-black tracking-tighter italic ${isFullscreen ? 'text-3xl' : 'text-5xl md:text-8xl'}`}>
+              <h2 className={`font-comic uppercase text-black tracking-tighter italic ${isFullscreen ? 'text-3xl' : 'text-5xl md:text-7xl'}`}>
                 Mission_Logs
               </h2>
             </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="bg-comic-red text-white font-comic text-xl md:text-2xl px-6 py-2 border-4 border-black -rotate-2 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => { setSoundEnabled(s => !s); }}
+                className={`font-comic text-sm uppercase border-4 border-black px-3 py-1 transition-all cursor-pointer ${soundEnabled ? 'bg-comic-yellow text-black' : 'bg-white text-black opacity-50'}`}
+              >
+                {soundEnabled ? '🔊 SFX ON' : '🔇 SFX OFF'}
+              </button>
+              <div className="bg-comic-red text-white font-comic text-xl px-5 py-1 border-4 border-black -rotate-1 shadow-[3px_3px_0_0_rgba(0,0,0,1)]">
                 {currentPage + 1} / {comicPages.length}
               </div>
-              <button 
-                onClick={toggleFullscreen}
-                className="comic-button !bg-black !text-white !p-2 hidden md:flex"
-                title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-              >
-                {isFullscreen ? <Minimize2 size={24} /> : <Maximize2 size={24} />}
+              <button onClick={toggleFullscreen} className="comic-button !bg-black !text-white !p-2 !text-base hidden md:flex" title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}>
+                {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
               </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className={`relative mx-auto transition-all duration-300 flex-1 flex flex-col justify-center ${isZoomed ? 'max-w-none w-full' : 'max-w-4xl w-full px-4'} ${isFullscreen ? 'overflow-hidden' : ''}`}>
-        {/* VIEW TOOLS */}
-        <AnimatePresence>
-          {(!isFullscreen || controlsVisible) && (
-            <motion.div 
-              initial={isFullscreen ? { opacity: 0 } : {}}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="grid grid-cols-2 md:flex justify-center gap-4 mb-8 shrink-0"
-            >
-               <button 
-                onClick={toggleZoom}
-                className="comic-button !bg-comic-blue !text-white flex items-center justify-center gap-2"
-               >
-                 {isZoomed ? <ZoomOut size={20} /> : <ZoomIn size={20} />}
-                 <span className="font-comic uppercase text-sm md:text-base">{isZoomed ? 'Fit Screen' : 'Zoom Detail'}</span>
-               </button>
-               <button 
-                onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-                className={`comic-button flex items-center justify-center gap-2 ${isAutoPlaying ? '!bg-comic-red !text-white' : '!bg-comic-yellow !text-black'}`}
-               >
-                 {isAutoPlaying ? <Pause size={20} /> : <Play size={20} />}
-                 <span className="font-comic uppercase text-sm md:text-base">{isAutoPlaying ? 'Stop Auto' : 'Auto Play'}</span>
-               </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      {/* Tool buttons */}
+      <AnimatePresence>
+        {(!isFullscreen || controlsVisible) && (
+          <motion.div initial={isFullscreen ? { opacity: 0 } : {}} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex justify-center gap-4 shrink-0 px-4">
+            <button onClick={() => { setIsZoomed(z => !z); playSound('click'); }} className="comic-button !bg-comic-blue !text-white flex items-center gap-2 !text-base !py-3 !px-5">
+              {isZoomed ? <ZoomOut size={18} /> : <ZoomIn size={18} />}
+              <span className="font-comic uppercase text-sm">{isZoomed ? 'Fit' : 'Zoom'}</span>
+            </button>
+            <button onClick={() => { setIsAutoPlaying(a => !a); playSound('click'); }} className={`comic-button flex items-center gap-2 !text-base !py-3 !px-5 ${isAutoPlaying ? '!bg-comic-red !text-white' : '!bg-comic-yellow !text-black'}`}>
+              {isAutoPlaying ? <Pause size={18} /> : <Play size={18} />}
+              <span className="font-comic uppercase text-sm">{isAutoPlaying ? 'Stop' : 'Auto Play'}</span>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        {/* READER STAGE */}
-        <div className={`relative flex-1 flex items-center justify-center ${isFullscreen ? 'max-h-full' : ''}`}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentPage}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.2}
-              onDragEnd={handleDragEnd}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2 }}
-              className="w-full flex justify-center h-full items-center p-2"
-            >
-              <ComicPanel className={`p-1 bg-black !border-black relative flex items-center justify-center max-h-full overflow-auto scrollbar-hide ${!isZoomed ? '!shadow-[12px_12px_0_0_rgba(0,0,0,1)]' : ''}`}>
-                <div className={`bg-white relative flex items-center justify-center min-h-[400px] ${isZoomed ? 'w-full' : 'max-h-full lg:max-h-[85vh] aspect-[3/4] md:aspect-[4/5]'}`}>
-                  {isPageLoading && (
-                    <div className="absolute inset-0 z-20 bg-white flex items-center justify-center">
-                      <ComicLoader size="md" />
-                    </div>
-                  )}
-                  <motion.img 
-                    src={comicPages[currentPage]} 
-                    alt={`Mission Log Page ${currentPage + 1}`}
-                    onLoad={() => setIsPageLoading(false)}
-                    className={`max-w-full max-h-full w-auto h-auto transition-all ${isPageLoading ? 'opacity-0' : 'opacity-100'} cursor-grab active:cursor-grabbing`}
-                    referrerPolicy="no-referrer"
-                    draggable={false}
-                  />
-                  
-                  {/* NAVIGATION OVERLAYS (Invisible clickable areas for desktop) */}
-                  {!isZoomed && !isFullscreen && (
-                    <>
-                      <div 
-                        className="absolute left-0 top-0 w-1/3 h-full cursor-pointer z-10" 
-                        onClick={prevPage}
-                        title="Previous Page"
-                      />
-                      <div 
-                        className="absolute right-0 top-0 w-1/3 h-full cursor-pointer z-10" 
-                        onClick={nextPage}
-                        title="Next Page"
-                      />
-                    </>
-                  )}
-                </div>
-              </ComicPanel>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* QUICK INDICATOR */}
-          {!isFullscreen && (
-            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase opacity-40 font-black tracking-[0.2em] pointer-events-none whitespace-nowrap">
-              [ SWIPE OR USE ARROWS ]
-            </div>
-          )}
-        </div>
-
-        {/* BOTTOM NAVIGATION */}
-        <AnimatePresence>
-          {(!isFullscreen || controlsVisible) && (
-            <motion.div 
-              initial={isFullscreen ? { y: 100 } : {}}
-              animate={{ y: 0 }}
-              exit={{ y: 100 }}
-              className={`mt-16 shrink-0 ${isFullscreen ? 'bg-white p-4 border-t-4 border-black z-20 w-full' : 'bg-white/10 backdrop-blur-sm p-4 rounded-3xl border-2 border-black/5'}`}
-            >
-              <div className="flex flex-col md:flex-row justify-center items-center gap-8">
-                <div className="flex items-center gap-4 md:gap-6">
-                  <button 
-                    onClick={prevPage}
-                    disabled={currentPage === 0}
-                    className={`comic-button !py-4 !px-8 !bg-white !text-black border-4 border-black ${currentPage === 0 ? 'opacity-20 cursor-not-allowed shadow-none translate-y-0' : ''}`}
-                  >
-                    <ChevronLeft size={32} />
-                  </button>
-                  
-                  <div className="hidden lg:flex gap-1.5 px-4 overflow-x-auto max-w-[400px] scrollbar-hide py-2">
-                    {comicPages.map((_, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => {
-                          setCurrentPage(idx);
-                          setIsPageLoading(true);
-                        }}
-                        className={`h-6 transition-all duration-300 border-2 border-black shrink-0 ${idx === currentPage ? 'w-10 bg-comic-red' : 'w-4 bg-white hover:bg-comic-yellow'}`}
-                        title={`Jump to Page ${idx + 1}`}
-                      />
-                    ))}
+      {/* Reader */}
+      <div className={`relative flex-1 flex flex-col items-center justify-center mx-auto w-full ${isZoomed ? 'max-w-none px-0' : 'max-w-3xl px-4'}`}>
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div
+            key={currentPage}
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            className="w-full flex justify-center"
+          >
+            <ComicPanel className={`p-1 bg-black !border-black relative flex items-center justify-center w-full ${!isZoomed ? '!shadow-[10px_10px_0_0_rgba(0,0,0,1)]' : ''}`}>
+              <div className={`bg-white relative flex items-center justify-center w-full overflow-hidden ${isZoomed ? 'min-h-[60vh]' : isFullscreen ? 'max-h-[72vh]' : 'aspect-[3/4] max-h-[80vh]'}`}>
+                {isPageLoading && (
+                  <div className="absolute inset-0 z-20 bg-white flex items-center justify-center">
+                    <ComicLoader size="md" />
                   </div>
-
-                  <button 
-                    onClick={nextPage}
-                    disabled={currentPage === comicPages.length - 1}
-                    className={`comic-button !py-4 !px-8 !bg-white !text-black border-4 border-black ${currentPage === comicPages.length - 1 ? 'opacity-20 cursor-not-allowed shadow-none translate-y-0' : ''}`}
-                  >
-                    <ChevronRight size={32} />
-                  </button>
-                </div>
-                
-                {/* Mobile jump info */}
-                <div className="lg:hidden font-comic uppercase text-xl text-black">
-                  Page {currentPage + 1} / {comicPages.length}
-                </div>
-
-                {isFullscreen && (
-                   <button 
-                    onClick={toggleFullscreen}
-                    className="comic-button !bg-comic-red !text-white !p-3 rounded-xl block md:hidden"
-                   >
-                     CLOSE READER
-                   </button>
+                )}
+                <img
+                  src={comicPages[currentPage]}
+                  alt={`Mission Log Page ${currentPage + 1}`}
+                  onLoad={() => setIsPageLoading(false)}
+                  className={`max-w-full max-h-full w-auto h-auto select-none transition-opacity duration-300 ${isPageLoading ? 'opacity-0' : 'opacity-100'}`}
+                  referrerPolicy="no-referrer"
+                  draggable={false}
+                />
+                {!isZoomed && (
+                  <>
+                    <div className="absolute left-0 top-0 w-1/3 h-full cursor-w-resize z-10" onClick={prevPage} />
+                    <div className="absolute right-0 top-0 w-1/3 h-full cursor-e-resize z-10" onClick={nextPage} />
+                  </>
                 )}
               </div>
-            </motion.div>
-          )}
+            </ComicPanel>
+          </motion.div>
         </AnimatePresence>
+        {!isFullscreen && (
+          <p className="mt-3 font-mono text-[10px] uppercase opacity-30 tracking-[0.2em] text-center">
+            ← SWIPE OR CLICK SIDES OR USE ARROW KEYS →
+          </p>
+        )}
       </div>
+
+      {/* Bottom nav */}
+      <AnimatePresence>
+        {(!isFullscreen || controlsVisible) && (
+          <motion.div
+            initial={isFullscreen ? { y: 80, opacity: 0 } : {}}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            className={`shrink-0 ${isFullscreen ? 'bg-white px-6 py-3 border-t-4 border-black' : 'px-4'}`}
+          >
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={prevPage}
+                  disabled={currentPage === 0}
+                  className={`comic-button !py-3 !px-7 !bg-white !text-black border-4 border-black !text-base ${currentPage === 0 ? 'opacity-20 cursor-not-allowed !shadow-none !translate-x-0 !translate-y-0' : ''}`}
+                >
+                  <ChevronLeft size={28} />
+                </button>
+
+                <div className="hidden md:flex gap-1.5 overflow-x-auto max-w-xs py-1">
+                  {comicPages.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setDirection(idx > currentPage ? 'next' : 'prev');
+                        setCurrentPage(idx);
+                        setIsPageLoading(true);
+                        playSound('click');
+                      }}
+                      className={`h-5 shrink-0 border-2 border-black transition-all duration-200 ${idx === currentPage ? 'w-8 bg-comic-red' : 'w-4 bg-white hover:bg-comic-yellow'}`}
+                      title={`Page ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  onClick={nextPage}
+                  disabled={currentPage === comicPages.length - 1}
+                  className={`comic-button !py-3 !px-7 !bg-white !text-black border-4 border-black !text-base ${currentPage === comicPages.length - 1 ? 'opacity-20 cursor-not-allowed !shadow-none !translate-x-0 !translate-y-0' : ''}`}
+                >
+                  <ChevronRight size={28} />
+                </button>
+              </div>
+
+              <div className="md:hidden font-comic uppercase text-lg text-black">
+                Page {currentPage + 1} / {comicPages.length}
+              </div>
+
+              {isFullscreen && (
+                <button onClick={toggleFullscreen} className="comic-button !bg-comic-red !text-white !py-2 !px-6 !text-base md:hidden">
+                  CLOSE READER
+                </button>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {!isFullscreen && <div className="industrial-line opacity-20" />}
     </section>
