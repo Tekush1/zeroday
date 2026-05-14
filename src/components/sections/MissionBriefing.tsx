@@ -24,15 +24,15 @@ const MissionBriefing: React.FC = () => {
         <div className="relative group">
           <div className="w-28 h-28 bg-white border-4 border-black -rotate-6 group-hover:rotate-0 transition-transform shadow-[6px_6px_0_0_rgba(0,0,0,1)] overflow-hidden">
             <img 
-              src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=200&h=200&fit=crop" 
-              alt="IxEDGE" 
+              src="https://i.ibb.co/dsRLVtyG/Screenshot-from-2026-05-15-03-15-06.png" 
+              alt="IxEDGE forge" 
               className="w-full h-full object-cover"
             />
           </div>
           <div className="absolute -bottom-2 -left-2 bg-white text-black text-[10px] font-black px-1 border-2 border-black -rotate-12">INFRA_V2</div>
         </div>
       ),
-      title: "IxEDGE", 
+      title: "IxEDGE forge", 
       desc: "IxEDGE provides the robust cyberinfrastructure that powers the grid, ensuring zero-latency operations and unbreakable uptime for mission-critical systems.", 
       color: "bg-comic-red/5" 
     }
