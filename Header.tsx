@@ -11,12 +11,13 @@ const Header: React.FC = () => {
           <div className="hidden lg:flex items-center gap-4 ml-6 pl-6 border-l-2 border-black/10">
             <span className="font-mono text-[10px] uppercase opacity-40 font-black">Organized by</span>
             <div className="flex items-center gap-4">
-               <div className="flex items-center group cursor-pointer">
+               <div className="flex items-center gap-1 group cursor-pointer">
                   <img
-                    src="/cyberhx-logo.jpg"
+                    src="https://i.ibb.co/wTtpy8L/503654116-17874779685368931-7076887206889671821-n.jpg"
                     alt="CyberHX"
-                    className="h-8 w-auto object-contain group-hover:scale-110 transition-transform"
+                    className="w-8 h-8 object-contain rounded-sm rotate-3 group-hover:rotate-0 transition-transform border border-black/10"
                   />
+                  <span className="font-comic text-xl text-black">CyberHX</span>
                </div>
             </div>
           </div>

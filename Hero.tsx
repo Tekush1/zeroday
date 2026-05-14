@@ -44,12 +44,13 @@ const Hero: React.FC = () => {
         <div className="absolute top-12 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white border-2 border-black px-4 py-1.5 -rotate-1 z-10 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
            <span className="font-mono text-[8px] uppercase font-black opacity-40 whitespace-nowrap">Org. by</span>
            <div className="flex items-center gap-4">
-              <div className="flex items-center">
+              <div className="flex items-center gap-2">
                  <img
-                   src="/cyberhx-logo.jpg"
+                   src="https://i.ibb.co/wTtpy8L/503654116-17874779685368931-7076887206889671821-n.jpg"
                    alt="CyberHX"
-                   className="h-7 w-auto object-contain"
+                   className="w-6 h-6 object-contain rounded-xs rotate-3 border border-black/10"
                  />
+                 <span className="font-comic text-sm uppercase">CyberHX</span>
               </div>
            </div>
         </div>
