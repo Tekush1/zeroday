@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ChevronLeft, ChevronRight, BookOpen, ZoomIn, ZoomOut, Maximize2, Minimize2, Play, Pause } from 'lucide-react';
 import ComicPanel from '../ui/ComicPanel';
 import ComicLoader from '../ui/ComicLoader';
+import { playSound } from '../ui/useSoundFX';
 import { motion, AnimatePresence } from 'motion/react';
 
 const comicPages = [
@@ -27,48 +28,6 @@ const comicPages = [
   "https://i.ibb.co/yFrJrxP3/Chat-GPT-Image-May-12-2026-11-30-47-PM.png"
 ];
 
-function playPageFlip() {
-  try {
-    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const bufferSize = Math.floor(ctx.sampleRate * 0.08);
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize) * 0.35;
-    }
-    const source = ctx.createBufferSource();
-    source.buffer = buffer;
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.value = 2200;
-    filter.Q.value = 0.6;
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(1, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.09);
-    source.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-    source.start();
-    source.stop(ctx.currentTime + 0.1);
-  } catch (_) {}
-}
-
-function playClickSound() {
-  try {
-    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.setValueAtTime(700, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.06);
-    gain.gain.setValueAtTime(0.25, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.07);
-  } catch (_) {}
-}
-
 const ComicReader: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -77,15 +36,8 @@ const ComicReader: React.FC = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
   const [controlsVisible, setControlsVisible] = useState(true);
   const [direction, setDirection] = useState<'next' | 'prev'>('next');
-  const [soundEnabled, setSoundEnabled] = useState(true);
   const controlsTimer = useRef<ReturnType<typeof setTimeout>>();
   const touchStart = useRef<number>(0);
-
-  const playSound = useCallback((type: 'flip' | 'click') => {
-    if (!soundEnabled) return;
-    if (type === 'flip') playPageFlip();
-    else playClickSound();
-  }, [soundEnabled]);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
@@ -102,7 +54,7 @@ const ComicReader: React.FC = () => {
       }, 5000);
     }
     return () => clearInterval(interval);
-  }, [isAutoPlaying, isPageLoading, currentPage, playSound]);
+  }, [isAutoPlaying, isPageLoading, currentPage]);
 
   useEffect(() => {
     if (isFullscreen && controlsVisible) {
@@ -114,8 +66,7 @@ const ComicReader: React.FC = () => {
 
   useEffect(() => {
     [comicPages[currentPage + 1], comicPages[currentPage + 2]].filter(Boolean).forEach(url => {
-      const img = new Image();
-      img.src = url;
+      const img = new Image(); img.src = url;
     });
   }, [currentPage]);
 
@@ -126,7 +77,7 @@ const ComicReader: React.FC = () => {
       setIsPageLoading(true);
       playSound('flip');
     }
-  }, [currentPage, playSound]);
+  }, [currentPage]);
 
   const prevPage = useCallback(() => {
     if (currentPage > 0) {
@@ -135,7 +86,7 @@ const ComicReader: React.FC = () => {
       setIsPageLoading(true);
       playSound('flip');
     }
-  }, [currentPage, playSound]);
+  }, [currentPage]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -148,7 +99,6 @@ const ComicReader: React.FC = () => {
   }, [nextPage, prevPage, isFullscreen]);
 
   const showControls = () => { if (!controlsVisible) setControlsVisible(true); };
-
   const handleTouchStart = (e: React.TouchEvent) => { touchStart.current = e.touches[0].clientX; };
   const handleTouchEnd = (e: React.TouchEvent) => {
     const diff = touchStart.current - e.changedTouches[0].clientX;
@@ -156,7 +106,7 @@ const ComicReader: React.FC = () => {
   };
 
   const toggleFullscreen = () => {
-    playSound('click');
+    playSound('whoosh');
     setIsFullscreen(f => !f);
     setIsZoomed(false);
     setControlsVisible(true);
@@ -176,7 +126,6 @@ const ComicReader: React.FC = () => {
       onTouchEnd={handleTouchEnd}
       className={`space-y-8 py-12 transition-all duration-500 ${isFullscreen ? 'fixed inset-0 z-[100] bg-black flex flex-col overflow-hidden' : ''}`}
     >
-      {/* Header */}
       <AnimatePresence>
         {(!isFullscreen || controlsVisible) && (
           <motion.div
@@ -195,12 +144,6 @@ const ComicReader: React.FC = () => {
               </h2>
             </div>
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => { setSoundEnabled(s => !s); }}
-                className={`font-comic text-sm uppercase border-4 border-black px-3 py-1 transition-all cursor-pointer ${soundEnabled ? 'bg-comic-yellow text-black' : 'bg-white text-black opacity-50'}`}
-              >
-                {soundEnabled ? '🔊 SFX ON' : '🔇 SFX OFF'}
-              </button>
               <div className="bg-comic-red text-white font-comic text-xl px-5 py-1 border-4 border-black -rotate-1 shadow-[3px_3px_0_0_rgba(0,0,0,1)]">
                 {currentPage + 1} / {comicPages.length}
               </div>
@@ -212,15 +155,17 @@ const ComicReader: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Tool buttons */}
       <AnimatePresence>
         {(!isFullscreen || controlsVisible) && (
           <motion.div initial={isFullscreen ? { opacity: 0 } : {}} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex justify-center gap-4 shrink-0 px-4">
-            <button onClick={() => { setIsZoomed(z => !z); playSound('click'); }} className="comic-button !bg-comic-blue !text-white flex items-center gap-2 !text-base !py-3 !px-5">
+            <button onClick={() => { setIsZoomed(z => !z); playSound('pop'); }} className="comic-button !bg-comic-blue !text-white flex items-center gap-2 !text-base !py-3 !px-5">
               {isZoomed ? <ZoomOut size={18} /> : <ZoomIn size={18} />}
               <span className="font-comic uppercase text-sm">{isZoomed ? 'Fit' : 'Zoom'}</span>
             </button>
-            <button onClick={() => { setIsAutoPlaying(a => !a); playSound('click'); }} className={`comic-button flex items-center gap-2 !text-base !py-3 !px-5 ${isAutoPlaying ? '!bg-comic-red !text-white' : '!bg-comic-yellow !text-black'}`}>
+            <button
+              onClick={() => { setIsAutoPlaying(a => !a); playSound(isAutoPlaying ? 'cancel' : 'confirm'); }}
+              className={`comic-button flex items-center gap-2 !text-base !py-3 !px-5 ${isAutoPlaying ? '!bg-comic-red !text-white' : '!bg-comic-yellow !text-black'}`}
+            >
               {isAutoPlaying ? <Pause size={18} /> : <Play size={18} />}
               <span className="font-comic uppercase text-sm">{isAutoPlaying ? 'Stop' : 'Auto Play'}</span>
             </button>
@@ -228,7 +173,6 @@ const ComicReader: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Reader */}
       <div className={`relative flex-1 flex flex-col items-center justify-center mx-auto w-full ${isZoomed ? 'max-w-none px-0' : 'max-w-3xl px-4'}`}>
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
@@ -273,7 +217,6 @@ const ComicReader: React.FC = () => {
         )}
       </div>
 
-      {/* Bottom nav */}
       <AnimatePresence>
         {(!isFullscreen || controlsVisible) && (
           <motion.div
@@ -292,7 +235,6 @@ const ComicReader: React.FC = () => {
                 >
                   <ChevronLeft size={28} />
                 </button>
-
                 <div className="hidden md:flex gap-1.5 overflow-x-auto max-w-xs py-1">
                   {comicPages.map((_, idx) => (
                     <button
@@ -308,7 +250,6 @@ const ComicReader: React.FC = () => {
                     />
                   ))}
                 </div>
-
                 <button
                   onClick={nextPage}
                   disabled={currentPage === comicPages.length - 1}
@@ -317,11 +258,9 @@ const ComicReader: React.FC = () => {
                   <ChevronRight size={28} />
                 </button>
               </div>
-
               <div className="md:hidden font-comic uppercase text-lg text-black">
                 Page {currentPage + 1} / {comicPages.length}
               </div>
-
               {isFullscreen && (
                 <button onClick={toggleFullscreen} className="comic-button !bg-comic-red !text-white !py-2 !px-6 !text-base md:hidden">
                   CLOSE READER
