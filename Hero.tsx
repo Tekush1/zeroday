@@ -40,20 +40,41 @@ const Hero: React.FC = () => {
       <ComicPanel title="Sector 01: The Breach" className="lg:col-span-8 group relative bg-comic-white h-full" halftone>
         <div className="absolute inset-0 action-line opacity-30" />
         
-        {/* Organizers Badge */}
-        <div className="absolute top-12 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white border-2 border-black px-4 py-1.5 -rotate-1 z-10 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
-           <span className="font-mono text-[8px] uppercase font-black opacity-40 whitespace-nowrap">Org. by</span>
-           <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                 <img
-                   src="https://i.ibb.co/wTtpy8L/503654116-17874779685368931-7076887206889671821-n.jpg"
-                   alt="CyberHX"
-                   className="w-6 h-6 object-contain rounded-xs rotate-3 border border-black/10"
-                 />
-                 <span className="font-comic text-sm uppercase">CyberHX</span>
-              </div>
-           </div>
-        </div>
+       {/* Organizers Badge */}
+<div className="absolute top-12 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white border-2 border-black px-4 py-1.5 -rotate-1 z-10 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+   <span className="font-mono text-[8px] uppercase font-black opacity-40 whitespace-nowrap">
+      Organized by
+   </span>
+
+   <div className="flex items-center gap-5">
+      {/* CyberHX */}
+      <div className="flex items-center gap-2">
+         <img
+           src="https://i.ibb.co/wTtpy8L/503654116-17874779685368931-7076887206889671821-n.jpg"
+           alt="CyberHX"
+           className="w-6 h-6 object-contain rounded-xs rotate-3 border border-black/10"
+         />
+         <span className="font-comic text-sm uppercase tracking-wide">
+            CyberHX
+         </span>
+      </div>
+
+      {/* Divider */}
+      <div className="w-[2px] h-6 bg-black opacity-30" />
+
+      {/* IXEFO */}
+      <div className="flex items-center gap-2">
+         <img
+           src="/ixefo.png"
+           alt="IXEFO"
+           className="w-6 h-6 object-contain rounded-xs -rotate-3 border border-black/10"
+         />
+         <span className="font-comic text-sm uppercase tracking-wide text-comic-blue">
+            IXEFO
+         </span>
+      </div>
+   </div>
+</div>
 
         <div className="relative h-full flex flex-col justify-center items-center text-center p-12 pt-24 space-y-8 min-h-[500px]">
           <motion.div

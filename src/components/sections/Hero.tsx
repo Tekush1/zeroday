@@ -41,19 +41,37 @@ const Hero: React.FC = () => {
         <div className="absolute inset-0 action-line opacity-30" />
         
         {/* Organizers Badge */}
-        <div className="absolute top-12 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white border-2 border-black px-4 py-1.5 -rotate-1 z-10 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
-           <span className="font-mono text-[8px] uppercase font-black opacity-40 whitespace-nowrap">Org. by</span>
-           <div className="flex items-center gap-4">
-              <div className="flex items-center">
-                 <img
-                   src="/cyberhx-logo.jpg"
-                   alt="CyberHX"
-                   className="h-7 w-auto object-contain"
-                 />
-              </div>
-           </div>
-        </div>
+<div className="absolute top-12 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white border-2 border-black px-4 py-1.5 -rotate-1 z-10 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+   
+   <span className="font-mono text-[8px] uppercase font-black opacity-40 whitespace-nowrap">
+      Org. by
+   </span>
 
+   <div className="flex items-center gap-3">
+
+      {/* CyberHX */}
+      <div className="flex items-center">
+         <img
+           src="/cyberhx-logo.jpg"
+           alt="CyberHX"
+           className="h-7 w-auto object-contain"
+         />
+      </div>
+
+      {/* Divider */}
+      <div className="w-[1px] h-5 bg-black/20" />
+
+      {/* IXEFO */}
+      <div className="flex items-center">
+         <img
+           src="https://i.ibb.co/KptFC4h2/final.png"
+           alt="IXEFO"
+           className="h-7 w-auto object-contain"
+         />
+      </div>
+
+   </div>
+</div>
         <div className="relative h-full flex flex-col justify-center items-center text-center p-12 pt-24 space-y-8 min-h-[500px]">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}

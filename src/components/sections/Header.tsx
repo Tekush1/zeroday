@@ -9,14 +9,31 @@ const Header: React.FC = () => {
             Zero Day <span className="text-comic-red underline decoration-comic-blue underline-offset-4">Heist</span>
           </h1>
           <div className="hidden lg:flex items-center gap-4 ml-6 pl-6 border-l-2 border-black/10">
-            <span className="font-mono text-[10px] uppercase opacity-40 font-black">Organized by</span>
-            <div className="flex items-center gap-4">
-               <div className="flex items-center group cursor-pointer">
-                  <span className="font-comic text-xl uppercase text-black">CyberHX </span>
+  <span className="font-mono text-[10px] uppercase opacity-40 font-black">
+    Organized by
+  </span>
 
-               </div>
-            </div>
-          </div>
+  <div className="flex items-center gap-3">
+    
+    {/* CyberHX */}
+    <div className="flex items-center group cursor-pointer">
+      <span className="font-comic text-xl uppercase text-black">
+        CyberHX
+      </span>
+    </div>
+
+    {/* Divider */}
+    <span className="text-black/30 text-lg">×</span>
+
+    {/* IXEFO */}
+    <div className="flex items-center group cursor-pointer">
+      <span className="font-comic text-xl uppercase text-comic-blue">
+        IXEFO
+      </span>
+    </div>
+
+  </div>
+</div>
         </div>
         <nav className="hidden md:flex gap-8 font-comic text-2xl uppercase text-black">
           <a href="#logs" className="hover:text-comic-red transition-colors">Logs</a>
