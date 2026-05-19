@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Header from './components/sections/Header';
 import Hero from './components/sections/Hero';
 import MissionBriefing from './components/sections/MissionBriefing';
-import TargetDossiers from './components/sections/TargetDossiers';
 import Sponsors from './components/sections/Sponsors';
 import Memes from './components/sections/Memes';
 import FAQ from './components/sections/FAQ';
@@ -115,9 +114,7 @@ export default function App() {
         {view === 'home' ? (
           <>
             <Hero />
-            <MissionBriefing />
-            <TargetDossiers />
-            <Sponsors />
+            <MissionBriefing />            <Sponsors />
             <section className="flex justify-center py-12">
               <button
                 onClick={() => setView('memes')}

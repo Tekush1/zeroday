@@ -23,7 +23,14 @@ const Socials: React.FC = () => {
       color: "bg-[#5865F2]", 
       handle: "JOIN THE SERVER",
       link: "https://discord.gg/6NhwhVmmM"
-    }
+    },
+    { 
+  name: "WHATSAPP", 
+  image: "https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg", 
+  color: "bg-[#25D366]", 
+  handle: "JOIN THE GROUP",
+  link: "https://chat.whatsapp.com/JSOwzsT5fbSHZR0XDmmWW7"  // apna link yahan daalo
+},
   ];
 
   return (

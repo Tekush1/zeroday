@@ -157,8 +157,11 @@ const Hero: React.FC = () => {
           </div>
           <h3 className="font-comic text-4xl uppercase text-black">THE DATE IS <span className="text-comic-red underline decoration-comic-blue underline-offset-4">SET!</span></h3>
           <div className="mt-4 space-y-2">
-            <div className="font-comic text-5xl text-black">06 JUNE 2026</div>
-            <div className="font-comic text-3xl text-comic-blue">12:00 PM - 06:00 PM IST</div>
+   // Naya
+<div className="font-comic text-5xl text-black">30 MAY 2026</div>
+<div className="font-comic text-3xl text-comic-blue">12:00 AM IST</div>
+// Add karo qualifier info
+<div className="font-comic text-3xl text-black mt-2">QUALIFIER: 31 MAY 2026</div>
           </div>
           <div className="font-sans text-[10px] font-black uppercase text-black mt-4 tracking-widest opacity-40">
             SYNC YOUR NODES. DON'T BE LATE.

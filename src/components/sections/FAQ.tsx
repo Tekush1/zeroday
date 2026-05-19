@@ -29,24 +29,8 @@ const FAQ: React.FC<FAQProps> = ({ onReadBook }) => {
     a: "Click the 'Register' or 'Initialize Mission' button on the event page, complete your team details, and secure your slot before registrations close."
   },
   {
-    q: "WHAT SKILLS ARE REQUIRED?",
-    a: "Basic knowledge of Linux, networking, programming, or cybersecurity concepts is helpful, but the event includes challenges for both beginners and advanced players."
-  },
-  {
     q: "WHAT CATEGORIES WILL BE INCLUDED?",
     a: "Challenges may include Web Security, Cryptography, Reverse Engineering, OSINT, Digital Forensics, Binary Exploitation, Steganography, Networking, and Miscellaneous problem-solving tasks."
-  },
-  {
-    q: "WHAT TOOLS OR SETUP DO I NEED?",
-    a: "A laptop or desktop with a stable internet connection is enough. Linux, Kali Linux, WSL, or macOS is recommended for the best experience."
-  },
-  {
-    q: "IS ZERO DAY HEIST LEGAL?",
-    a: "Yes. All challenges are hosted inside a secure sandbox environment created strictly for educational and competitive purposes."
-  },
-  {
-    q: "HOW WILL THE WINNERS BE DECIDED?",
-    a: "Teams will be ranked based on points earned by solving challenges. The live leaderboard updates throughout the competition."
   },
   {
     q: "ARE THERE ANY PRIZES?",

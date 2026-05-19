@@ -4,7 +4,7 @@ import { Clock } from 'lucide-react';
 import ComicPanel from '../ui/ComicPanel';
 import SpeechBubble from '../ui/SpeechBubble';
 
-const TARGET_DATE = new Date('2026-06-06T12:00:00+05:30');
+const TARGET_DATE = new Date('2026-05-30T00:00:00+05:30');
 
 const Hero: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState({
@@ -71,7 +71,7 @@ const Hero: React.FC = () => {
       </div>
 
    </div>
-</div>
+</div>npm
         <div className="relative h-full flex flex-col justify-center items-center text-center p-12 pt-24 space-y-8 min-h-[500px]">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -153,8 +153,13 @@ const Hero: React.FC = () => {
           </div>
           <h3 className="font-comic text-4xl uppercase text-black">THE DATE IS <span className="text-comic-red underline decoration-comic-blue underline-offset-4">SET!</span></h3>
           <div className="mt-4 space-y-2">
-            <div className="font-comic text-5xl text-black">06 JUNE 2026</div>
-            <div className="font-comic text-3xl text-comic-blue">12:00 PM - 06:00 PM IST</div>
+          <div className="font-comic text-3xl text-black mt-2">QUALIFIER: 31 MAY 2026</div>
+
+<div className="font-comic text-3xl text-comic-blue">12:00 AM IST</div>
+<div className="font-comic text-5xl text-black">Final</div>
+
+<div className="font-comic text-5xl text-comic-red">06 JUNE 2026</div>
+
           </div>
           <div className="font-sans text-[10px] font-black uppercase text-black mt-4 tracking-widest opacity-40">
             SYNC YOUR NODES. DON'T BE LATE.

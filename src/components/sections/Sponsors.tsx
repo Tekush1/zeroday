@@ -9,7 +9,9 @@ const Sponsors: React.FC = () => {
   const poweredBy = [
     { name: "UNSTOP", logo: "https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/branding-guidelines/logos/blue/Unstop-Logo-Blue-Medium.jpg", url: "https://unstop.com" }
   ];
-
+const communityPartners = [
+  { name: "TRYHACKME", logo: "https://tryhackme.com/img/favicon.png", url: "https://tryhackme.com" }
+];
   return (
     <section className="space-y-12">
       <div className="flex items-center gap-6">
@@ -36,7 +38,30 @@ const Sponsors: React.FC = () => {
           </a>
         ))}
       </div>
+{/* Community Partners Section */}
+<div className="flex items-center gap-6">
+  <h2 className="font-comic text-6xl uppercase px-8 py-2 bg-comic-yellow text-black -rotate-1 border-4 border-black">Community Partners</h2>
+  <div className="h-4 bg-black flex-1 halftone-pattern" />
+</div>
 
+<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+  {communityPartners.map((item, idx) => (
+    <a key={idx} href={item.url} target="_blank" rel="noopener noreferrer">
+      <ComicPanel className="group hover:rotate-3 transition-transform p-0 !shadow-[8px_8px_0_0_rgba(0,0,0,1)] hover:!shadow-[12px_12px_0_0_rgba(0,0,0,1)]">
+        <div className="aspect-square overflow-hidden relative bg-white flex items-center justify-center p-4">
+          <img
+            src={item.logo}
+            alt={item.name}
+            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+          />
+          <div className="absolute bottom-0 left-0 right-0 bg-black text-white text-center py-1 font-comic text-xl uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+            {item.name}
+          </div>
+        </div>
+      </ComicPanel>
+    </a>
+  ))}
+</div>
       {/* Powered By Section */}
       <div className="flex items-center gap-6">
         <h2 className="font-comic text-6xl uppercase px-8 py-2 bg-comic-blue text-white rotate-1 border-4 border-black">Powered By</h2>
