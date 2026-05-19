@@ -71,7 +71,7 @@ const Hero: React.FC = () => {
       </div>
 
    </div>
-</div>npm
+</div>
         <div className="relative h-full flex flex-col justify-center items-center text-center p-12 pt-24 space-y-8 min-h-[500px]">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
