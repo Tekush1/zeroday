@@ -3,7 +3,10 @@ import ComicPanel from '../ui/ComicPanel';
 
 const Sponsors: React.FC = () => {
   const sponsors = [
+    
     { name: "HACKVISER", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxLkrJ1tQfj0u4Ox1dZ9X4B3eQJpMBVnJwhQ&s", url: "https://hackviser.com" }
+    { name: "THUNDERCIPHER", logo: "https://i.ibb.co/v8dT3pd/Screenshot-from-2026-05-19-14-09-51.png", url: "https://thundercipher.com" }
+
   ];
 
   const poweredBy = [
