@@ -42,11 +42,10 @@ const Sponsors: React.FC = () => {
       </div>
 
       {/* Cybersecurity Partners Section */}
-      <div className="flex items-center gap-6">
-        <h2 className="font-comic text-6xl uppercase px-8 py-2 bg-comic-green text-white rotate-1 border-4 border-black">Cybersecurity Partners</h2>
-        <div className="h-4 bg-black flex-1 halftone-pattern" />
-      </div>
-
+     <div className="flex items-center gap-6">
+  <h2 className="font-comic text-6xl uppercase px-8 py-2 bg-green-500 text-white rotate-1 border-4 border-black">Cybersecurity Partners</h2>
+  <div className="h-4 bg-black flex-1 halftone-pattern" />
+</div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
         {cybersecurityPartners.map((item, idx) => (
           <a key={idx} href={item.url} target="_blank" rel="noopener noreferrer">
