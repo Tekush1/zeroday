@@ -22,7 +22,7 @@ const FAQ: React.FC<FAQProps> = ({ onReadBook }) => {
   },
   {
     q: "CAN I PARTICIPATE SOLO?",
-    a: "The event is designed for teams of 2–4 members. Solo participation may not be allowed depending on the final event rules."
+    a: "The event is designed for teams of 1–4 members. Solo participation may be allowed depending on the final event rules."
   },
   {
     q: "HOW DO I REGISTER?",

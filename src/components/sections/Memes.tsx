@@ -16,8 +16,8 @@ const Memes: React.FC = () => {
   const memeImages = [
     "https://i.ibb.co/C51DsryC/Screenshot-from-2026-05-12-21-43-47.png",
     "https://images.unsplash.com/photo-1513360371669-4ada3d3f4be5?auto=format&fit=crop&q=80&w=400&h=400",
-    "https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=400&h=400",
-    "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400&h=400",
+    "https://i.ibb.co/WQnHg7y/Screenshot-from-2026-06-05-18-28-09.png",
+    "https://i.ibb.co/q2ryrsd/Screenshot-from-2026-06-05-18-33-26.png",
     "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&q=80&w=400&h=400",
     "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&q=80&w=400&h=400",
     "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400&h=400",
