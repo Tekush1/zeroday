@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './components/sections/Header';
 import Hero from './components/sections/Hero';
 import MissionBriefing from './components/sections/MissionBriefing';
@@ -12,7 +12,7 @@ import Socials from './components/sections/Socials';
 import Footer from './components/sections/Footer';
 import ComicLoader from './components/ui/ComicLoader';
 import Leaderboard from './components/sections/Leaderboard';
-import { playSound, setSoundEnabled, isSoundEnabled } from './components/ui/useSoundFX';
+import { playSound, setSoundEnabled } from './components/ui/useSoundFX';
 import { motion, AnimatePresence } from 'motion/react';
 
 type InnerView = 'home' | 'memes' | 'comic';
@@ -76,7 +76,7 @@ function LeaderboardRoute() {
   );
 }
 
-export default function App() {
+function AppInner() {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [sfxOn, setSfxOn] = useState(true);
 
@@ -85,7 +85,6 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  // ── Global hover sound ──
   useEffect(() => {
     const onEnter = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
@@ -95,16 +94,13 @@ export default function App() {
     return () => document.removeEventListener('mouseover', onEnter);
   }, []);
 
-  // ── Global click sounds ──
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
       const btn = t.closest('button, a, [role="button"]');
       if (!btn) return;
-
       const text = btn.textContent?.toLowerCase() ?? '';
       const cls = btn.className ?? '';
-
       if (text.includes('discord') || text.includes('register') || text.includes('initialize')) {
         playSound('whoosh');
       } else if (text.includes('back') || text.includes('close') || text.includes('escape')) {
@@ -152,10 +148,8 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Background texture */}
       <div className="fixed inset-0 halftone-pattern opacity-[0.08] pointer-events-none z-0" />
 
-      {/* SFX toggle */}
       {!isInitialLoading && (
         <button
           onClick={toggleSFX}
@@ -175,5 +169,13 @@ export default function App() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <AppInner />
+    </Router>
   );
 }
