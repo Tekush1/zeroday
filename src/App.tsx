@@ -10,11 +10,12 @@ import ActionQuote from './components/sections/ActionQuote';
 import Socials from './components/sections/Socials';
 import Footer from './components/sections/Footer';
 import ComicLoader from './components/ui/ComicLoader';
+import Leaderboard from './components/sections/Leaderboard';
 import { playSound, setSoundEnabled, isSoundEnabled } from './components/ui/useSoundFX';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
-  const [view, setView] = useState<'home' | 'memes' | 'comic'>('home');
+  const [view, setView] = useState<'home' | 'memes' | 'comic' | 'leaderboard'>('home');
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [sfxOn, setSfxOn] = useState(true);
 
@@ -108,7 +109,7 @@ export default function App() {
         </button>
       )}
 
-      <Header />
+      <Header onLeaderboard={() => setView('leaderboard')} />
 
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-12 relative z-10">
         {view === 'home' ? (
@@ -134,6 +135,8 @@ export default function App() {
             </button>
             <Memes />
           </div>
+        ) : view === 'leaderboard' ? (
+          <Leaderboard onBack={() => setView('home')} />
         ) : (
           <div className="space-y-8">
             <button onClick={() => setView('home')} className="comic-button !bg-black !text-white text-xl !py-2 !px-6">

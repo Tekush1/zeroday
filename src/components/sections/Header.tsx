@@ -1,6 +1,11 @@
 import React from 'react';
+import { Trophy } from 'lucide-react';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onLeaderboard: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onLeaderboard }) => {
   return (
     <header className="sticky top-0 z-50 p-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between comic-panel p-3 bg-white">
@@ -35,10 +40,17 @@ const Header: React.FC = () => {
   </div>
 </div>
         </div>
-        <nav className="hidden md:flex gap-8 font-comic text-2xl uppercase text-black">
+        <nav className="hidden md:flex gap-8 font-comic text-2xl uppercase text-black items-center">
           <a href="#logs" className="hover:text-comic-red transition-colors">Logs</a>
           <a href="#targets" className="hover:text-comic-red transition-colors">Targets</a>
           <a href="#memes" className="hover:text-comic-red transition-colors">Memes</a>
+          <button
+            onClick={onLeaderboard}
+            className="flex items-center gap-1.5 text-comic-red hover:text-black transition-colors font-comic text-2xl uppercase"
+          >
+            <Trophy size={20} />
+            Leaderboard
+          </button>
         </nav>
         <a 
           href="https://discord.gg/6NhwhVmmM" 
