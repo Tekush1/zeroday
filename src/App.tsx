@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Header from './components/sections/Header';
 import Hero from './components/sections/Hero';
 import MissionBriefing from './components/sections/MissionBriefing';
@@ -14,8 +15,68 @@ import Leaderboard from './components/sections/Leaderboard';
 import { playSound, setSoundEnabled, isSoundEnabled } from './components/ui/useSoundFX';
 import { motion, AnimatePresence } from 'motion/react';
 
+type InnerView = 'home' | 'memes' | 'comic';
+
+function HomeRoutes() {
+  const [view, setView] = useState<InnerView>('home');
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [view]);
+
+  return (
+    <main className="max-w-7xl mx-auto px-4 py-8 space-y-12 relative z-10">
+      {view === 'home' ? (
+        <>
+          <Hero />
+          <MissionBriefing />
+          <Sponsors />
+          <section className="flex justify-center py-12">
+            <button
+              onClick={() => setView('memes')}
+              className="comic-button !bg-comic-yellow !text-black !text-4xl px-12 py-6 hover:!bg-comic-red hover:!text-white"
+            >
+              ENTER THE MEME VAULT
+            </button>
+          </section>
+          <FAQ onReadBook={() => setView('comic')} />
+          <ActionQuote />
+          <Socials />
+        </>
+      ) : view === 'memes' ? (
+        <div className="space-y-8">
+          <button onClick={() => setView('home')} className="comic-button !bg-black !text-white text-xl !py-2 !px-6">
+            ← BACK TO COMMAND CENTER
+          </button>
+          <Memes />
+        </div>
+      ) : (
+        <div className="space-y-8">
+          <button onClick={() => setView('home')} className="comic-button !bg-black !text-white text-xl !py-2 !px-6">
+            ← BACK TO COMMAND CENTER
+          </button>
+          <ComicReader />
+        </div>
+      )}
+    </main>
+  );
+}
+
+function LeaderboardRoute() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <main className="max-w-7xl mx-auto px-4 py-8 space-y-12 relative z-10">
+      <Leaderboard onBack={() => navigate('/')} />
+    </main>
+  );
+}
+
 export default function App() {
-  const [view, setView] = useState<'home' | 'memes' | 'comic' | 'leaderboard'>('home');
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [sfxOn, setSfxOn] = useState(true);
 
@@ -24,11 +85,7 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [view]);
-
-  // ── Global hover sound (lightweight tick on any button/a/[role=button]) ──
+  // ── Global hover sound ──
   useEffect(() => {
     const onEnter = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
@@ -38,7 +95,7 @@ export default function App() {
     return () => document.removeEventListener('mouseover', onEnter);
   }, []);
 
-  // ── Global click sounds by element type ──
+  // ── Global click sounds ──
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
@@ -98,7 +155,7 @@ export default function App() {
       {/* Background texture */}
       <div className="fixed inset-0 halftone-pattern opacity-[0.08] pointer-events-none z-0" />
 
-      {/* Global SFX toggle — fixed bottom right */}
+      {/* SFX toggle */}
       {!isInitialLoading && (
         <button
           onClick={toggleSFX}
@@ -109,43 +166,12 @@ export default function App() {
         </button>
       )}
 
-      <Header onLeaderboard={() => setView('leaderboard')} />
+      <Header />
 
-      <main className="max-w-7xl mx-auto px-4 py-8 space-y-12 relative z-10">
-        {view === 'home' ? (
-          <>
-            <Hero />
-            <MissionBriefing />            <Sponsors />
-            <section className="flex justify-center py-12">
-              <button
-                onClick={() => setView('memes')}
-                className="comic-button !bg-comic-yellow !text-black !text-4xl px-12 py-6 hover:!bg-comic-red hover:!text-white"
-              >
-                ENTER THE MEME VAULT
-              </button>
-            </section>
-            <FAQ onReadBook={() => setView('comic')} />
-            <ActionQuote />
-            <Socials />
-          </>
-        ) : view === 'memes' ? (
-          <div className="space-y-8">
-            <button onClick={() => setView('home')} className="comic-button !bg-black !text-white text-xl !py-2 !px-6">
-              ← BACK TO COMMAND CENTER
-            </button>
-            <Memes />
-          </div>
-        ) : view === 'leaderboard' ? (
-          <Leaderboard onBack={() => setView('home')} />
-        ) : (
-          <div className="space-y-8">
-            <button onClick={() => setView('home')} className="comic-button !bg-black !text-white text-xl !py-2 !px-6">
-              ← BACK TO COMMAND CENTER
-            </button>
-            <ComicReader />
-          </div>
-        )}
-      </main>
+      <Routes>
+        <Route path="/" element={<HomeRoutes />} />
+        <Route path="/leaderboard" element={<LeaderboardRoute />} />
+      </Routes>
 
       <Footer />
     </div>
